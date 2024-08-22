@@ -11,6 +11,22 @@ $esEstudiante = true;
 echo "Nombre: $nombre <br>";
 echo "Edad: $edad <br>";
 echo "Altura: $altura <br>";
-echo "Es esutudiante? " . ($esEstudiante ? "SI" : "NO");
+echo "Es esutudiante?"  . ($esEstudiante ? "SI" : "NO");
+
+
+echo "<br>";
+
+$presentacion1 = "Hola, mi nombre es " . $nombre . " y tengo " . $edad . " años.";
+$presentacion2 = "Hola, mi nombre es $nombre y tengo $edad años.";
+define("SALUDO", "¡Bienvenido!"); 
+
+$mensaje = SALUDO . " " . $nombre;
+
+echo $presentacion1 . "<br>";
+echo $presentacion2 . "<br>";
+echo $mensaje . "<br>";
+
+                    
+
 ?>
                         
