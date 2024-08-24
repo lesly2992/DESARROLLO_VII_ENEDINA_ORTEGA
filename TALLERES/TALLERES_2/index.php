@@ -15,6 +15,8 @@ echo "Es esutudiante?"  . ($esEstudiante ? "SI" : "NO");
 
 
 echo "<br>";
+echo "<br>";
+
 
 $presentacion1 = "Hola, mi nombre es " . $nombre . " y tengo " . $edad . " años.";
 $presentacion2 = "Hola, mi nombre es $nombre y tengo $edad años.";
@@ -25,6 +27,9 @@ $mensaje = SALUDO . " " . $nombre;
 echo $presentacion1 . "<br>";
 echo $presentacion2 . "<br>";
 echo $mensaje . "<br>";
+
+echo "<br>";
+echo "<br>";
 
                     
 
