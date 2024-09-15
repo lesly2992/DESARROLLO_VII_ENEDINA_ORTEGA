@@ -1,0 +1,148 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  flex-direction: column;
+}
+
+/*HEADER*/
+nav {
+  width: auto;
+  height: 82px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background-color: rgba(45, 50, 80, 0.9);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-right: 20px;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  padding: 10px 15px;
+}
+
+nav button {
+  background-color: grey;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: all 300ms;
+}
+
+nav button:hover {
+  background-color: white;
+  color: grey;
+}
+
+/*FOOTER*/
+footer {
+  width: auto;
+  height: 57.8px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(45, 50, 80);
+}
+
+footer ul li {
+  display: inline;
+}
+
+footer ul li a {
+  text-decoration: none;
+  color: white;
+  padding: 10px 15px;
+}
+
+/*Login y registro*/
+.title {
+  text-align: center;
+}
+.formLogin {
+  border: 2px solid black;
+  max-width: 400px;
+  margin: 150px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.btn_container {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.btn_container button {
+  background-color: grey;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: all 300ms;
+}
+
+.btn_container button:hover {
+  background-color: white;
+  color: grey;
+}
+
+.message {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.message p a {
+  text-decoration: none;
+  color: grey;
+}
+
+/*index*/
+.container_promo {
+  background-image: url(../img/disney1.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  height: 350px;
+  width: 100%;
+}
