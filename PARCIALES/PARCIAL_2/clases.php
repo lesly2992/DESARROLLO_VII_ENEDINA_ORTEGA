@@ -1,167 +1,153 @@
 <?php
-// Interface
-interface Prestable {
-    public function obtenerDetallesPrestamo(): string;
-}
-
-// Clase abstracta que implementa la interfaz
-abstract class RecursoBiblioteca implements Prestable {
+interface Detalle {
+    public function obtenerDetallesEspecificos(): string;
+ }
+ // Clase abstracta Entrada
+ abstract class Entrada implements Detalle {
     public $id;
-    public $titulo;
-    public $autor;
-    public $anioPublicacion;
-    public $estado;
-    public $fechaAdquisicion;
+    public $fecha_creacion;
     public $tipo;
+    public function __construct($id, $fecha_creacion, $tipo) {
+        $this->id = $id;
+        $this->fecha_creacion = $fecha_creacion;
+        $this->tipo = $tipo;
+    }
+    abstract public function obtenerDetallesEspecificos(): string;
+ }
 
-    public function __construct($datos) {
-        foreach ($datos as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
+
+ // Clase EntradaUnaColumna
+class EntradaUnaColumna extends Entrada {
+    public $titulo;
+    public $descripcion;
+    public function __construct($id, $fecha_creacion, $titulo, $descripcion) {
+        parent::__construct($id, $fecha_creacion, 1);
+        $this->titulo = $titulo;
+        $this->descripcion = $descripcion;
+    }
+    public function obtenerDetallesEspecificos(): string {
+        return "Entrada de una columna: {$this->titulo}";
+    }
+ }
+
+ // Clase EntradaDosColumnas
+class EntradaDosColumnas extends Entrada {
+    public $titulo1;
+    public $descripcion1;
+    public $titulo2;
+    public $descripcion2;
+    public function __construct($id, $fecha_creacion, $titulo1, $descripcion1, $titulo2, $descripcion2) {
+        parent::__construct($id, $fecha_creacion, 2);
+        $this->titulo1 = $titulo1;
+        $this->descripcion1 = $descripcion1;
+        $this->titulo2 = $titulo2;
+        $this->descripcion2 = $descripcion2;
+    }
+    public function obtenerDetallesEspecificos(): string {
+        return "Entrada de dos columnas: {$this->titulo1} | {$this->titulo2}";
+    }
+ }
+ // Clase EntradaTresColumnas
+ class EntradaTresColumnas extends Entrada {
+    public $titulo1;
+    public $descripcion1;
+    public $titulo2;
+    public $descripcion2;
+    public $titulo3;
+    public $descripcion3;
+    public function __construct($id, $fecha_creacion, $titulo1, $descripcion1, $titulo2, $descripcion2, $titulo3, $descripcion3) {
+        parent::__construct($id, $fecha_creacion, 3);
+        $this->titulo1 = $titulo1;
+        $this->descripcion1 = $descripcion1;
+        $this->titulo2 = $titulo2;
+        $this->descripcion2 = $descripcion2;
+        $this->titulo3 = $titulo3;
+        $this->descripcion3 = $descripcion3;
+    }
+    public function obtenerDetallesEspecificos(): string {
+        return "Entrada de tres columnas: {$this->titulo1} | {$this->titulo2} | {$this->titulo3}";
+    }
+ }
+class GestorBlog {
+    private $entradas = [];
+/*
+    public function cargarEntradas() {
+        if (file_exists('blog.json')) {
+            $json = file_get_contents('blog.json');
+            $data = json_decode($json, true);
+            foreach ($data as $entradaData) {
+                $this->entradas[] = new Entrada($entradaData);
             }
+        }
+    }
+
+    public function guardarEntradas() {
+        $data = array_map(function($entrada) {
+            return get_object_vars($entrada);
+        }, $this->entradas);
+        file_put_contents('blog.json', json_encode($data, JSON_PRETTY_PRINT));
+    }
+*/
+public function __construct() {
+    if (file_exists('blog.json')) {
+        $this->entradas = json_decode(file_get_contents('blog.json'), true);
+    }
+}
+// Guardar entradas en el archivo JSON
+public function guardarDatos() {
+    file_put_contents('blog.json', json_encode($this->entradas));
+}
+
+    public function obtenerEntradas() {
+        return $this->entradas;
+    }
+
+   public function agregarEntrada(Entrada $entrada) {
+    $this->entradas[] = $entrada;
+    $this->guardarDatos();
+}
+// Editar una entrada existente
+public function editarEntrada(Entrada $entrada) {
+    foreach ($this->entradas as &$ent) {
+        if ($ent['id'] == $entrada->id) {
+            $ent = $entrada;
+            $this->guardarDatos();
+            return;
+        }
+    }
+}
+// Eliminar una entrada por ID
+public function eliminarEntrada($id) {
+    foreach ($this->entradas as $key => $entrada) {
+        if ($entrada['id'] == $id) {
+            unset($this->entradas[$key]);
+            $this->guardarDatos();
+            return;
+        }
+    }
+}
+// Obtener una entrada por ID
+public function obtenerEntrada($id) {
+    foreach ($this->entradas as $entrada) {
+        if ($entrada['id'] == $id) {
+            return $entrada;
+        }
+    }
+    return null;
+}
+// Mover una entrada (hacia arriba o hacia abajo)
+public function moverEntrada($id, $direccion) {
+    $index = array_search($id, array_column($this->entradas, 'id'));
+    if ($index !== false) {
+        $swapIndex = $direccion == 'up' ? $index - 1 : $index + 1;
+        if (isset($this->entradas[$swapIndex])) {
+            $temp = $this->entradas[$swapIndex];
+            $this->entradas[$swapIndex] = $this->entradas[$index];
+            $this->entradas[$index] = $temp;
+            $this->guardarDatos();
         }
     }
 }
 
-// Clases que heredan de RecursoBiblioteca
-class Libro extends RecursoBiblioteca {
-    public $isbn;
-
-    public function __construct($datos) {
-        parent::__construct($datos);
-        $this->isbn = $datos['isbn'] ?? '';
-    }
-
-    public function obtenerDetallesPrestamo(): string {
-        return "Libro: {$this->titulo}, ISBN: {$this->isbn}";
-    }
-}
-
-class Revista extends RecursoBiblioteca {
-    public $numeroEdicion;
-
-    public function __construct($datos) {
-        parent::__construct($datos);
-        $this->numeroEdicion = $datos['numeroEdicion'] ?? 0;
-    }
-
-    public function obtenerDetallesPrestamo(): string {
-        return "Revista: {$this->titulo}, Número de Edición: {$this->numeroEdicion}";
-    }
-}
-
-class DVD extends RecursoBiblioteca {
-    public $duracion;
-
-    public function __construct($datos) {
-        parent::__construct($datos);
-        $this->duracion = $datos['duracion'] ?? 0;
-    }
-
-    public function obtenerDetallesPrestamo(): string {
-        return "DVD: {$this->titulo}, Duración: {$this->duracion} minutos";
-    }
-}
-
-// Clase para gestionar la biblioteca
-class GestorBiblioteca {
-    private $recursos = [];
-
-    public function cargarRecursos() {
-        $json = file_get_contents('biblioteca.json');
-        $data = json_decode($json, true);
-        
-        foreach ($data as $recursoData) {
-            switch ($recursoData['tipo']) {
-                case 'Libro':
-                    $recurso = new Libro($recursoData);
-                    break;
-                case 'Revista':
-                    $recurso = new Revista($recursoData);
-                    break;
-                case 'DVD':
-                    $recurso = new DVD($recursoData);
-                    break;
-                default:
-                    $recurso = new RecursoBiblioteca($recursoData);
-                    break;
-            }
-            $this->recursos[] = $recurso;
-        }
-        
-        return $this->recursos;
-    }
-
-    public function agregarRecurso(RecursoBiblioteca $recurso) {
-        $this->recursos[] = $recurso;
-        $this->guardarRecursos();
-    }
-
-    public function eliminarRecurso($id) {
-        $this->recursos = array_filter($this->recursos, function($recurso) use ($id) {
-            return $recurso->id !== $id;
-        });
-        $this->guardarRecursos();
-    }
-
-    public function actualizarRecurso(RecursoBiblioteca $recurso) {
-        foreach ($this->recursos as &$item) {
-            if ($item->id === $recurso->id) {
-                $item = $recurso;
-                break;
-            }
-        }
-        $this->guardarRecursos();
-    }
-
-    public function actualizarEstadoRecurso($id, $nuevoEstado) {
-        foreach ($this->recursos as &$recurso) {
-            if ($recurso->id === $id) {
-                $recurso->estado = $nuevoEstado;
-                break;
-            }
-        }
-        $this->guardarRecursos();
-    }
-
-    public function buscarRecursosPorEstado($estado) {
-        return array_filter($this->recursos, function($recurso) use ($estado) {
-            return $recurso->estado === $estado;
-        });
-    }
-
-    public function listarRecursos($filtroEstado = '', $campoOrden = 'id', $direccionOrden = 'ASC') {
-        // Filtrar recursos si es necesario
-        $recursos = $this->recursos;
-        if ($filtroEstado) {
-            $recursos = $this->buscarRecursosPorEstado($filtroEstado);
-        }
-
-        // Ordenar recursos
-        usort($recursos, function($a, $b) use ($campoOrden, $direccionOrden) {
-            if ($a->$campoOrden === $b->$campoOrden) {
-                return 0;
-            }
-            $result = $a->$campoOrden < $b->$campoOrden ? -1 : 1;
-            return $direccionOrden === 'ASC' ? $result : -$result;
-        });
-
-        return $recursos;
-    }
-
-    private function guardarRecursos() {
-        $json = json_encode(array_map(function($recurso) {
-            return (array) $recurso;
-        }, $this->recursos));
-        
-        file_put_contents('biblioteca.json', $json);
-    }
-}
-
-// Mapeo de estados a versiones legibles
-$estadosLegibles = [
-    'disponible' => 'DISPONIBLE',
-    'prestado' => 'PRESTADO',
-    'en_reparacion' => 'EN REPARACIÓN'
-];
-?>
+    
+}   
