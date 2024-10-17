@@ -7,8 +7,10 @@ function validarEmail($email) {
     return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
-function validarEdad($edad) {
-    return is_numeric($edad) && $edad >= 18 && $edad <= 120;
+function validarFechaNacimiento($fechaNacimiento) {
+    $fecha_actual = new DateTime();
+    $fecha_nac = new DateTime($fechaNacimiento);
+    return $fecha_nac <= $fecha_actual && $fecha_actual->diff($fecha_nac)->y >= 18;
 }
 
 function validarSitioWeb($sitioWeb) {
@@ -31,20 +33,10 @@ function validarComentarios($comentarios) {
 
 function validarFotoPerfil($archivo) {
     $tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif'];
-    $tamanoMaximo = 1 * 1024 * 1024; // 1MB
+    $tamanoMaximo = 1 * 1024 * 1024;
 
-    if ($archivo['error'] !== UPLOAD_ERR_OK) {
-        return false;
-    }
-
-    if (!in_array($archivo['type'], $tiposPermitidos)) {
-        return false;
-    }
-
-    if ($archivo['size'] > $tamanoMaximo) {
-        return false;
-    }
-
-    return true;
+    return $archivo['error'] === UPLOAD_ERR_OK &&
+           in_array($archivo['type'], $tiposPermitidos) &&
+           $archivo['size'] <= $tamanoMaximo;
 }
 ?>
